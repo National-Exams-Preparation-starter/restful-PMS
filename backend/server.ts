@@ -6,6 +6,8 @@ import { TserverConfig } from "./types/configTypes";
 import errorMiddleware from "./middlewares/error.middleware";
 import { prisma } from "./prisma";
 import router from "./routes";
+import swaggerUi from "swagger-ui-express";
+import swagggerJsonDoc from "./swagger/swagger.json";
 
 
 export class InitServer {
@@ -23,6 +25,7 @@ export class InitServer {
 
         // other configurations
         this.setupMiddleware();
+
         this.setupRoutes();
 
         // global error handling
@@ -37,6 +40,8 @@ export class InitServer {
         this.app.use(helmet()); // adding layer of security
         this.app.use(express.json()); // handling json
         this.app.use(express.urlencoded({ extended:false })); // encoding for forms submission
+
+        this.app.use("/api/v1/api-docs",swaggerUi.serve,swaggerUi.setup(swagggerJsonDoc))
     }
 
     // setting up the routes

@@ -7,7 +7,7 @@ import jwt, {
 } from "jsonwebtoken";
 import { jwtConfigs } from "../config/jwt.config";
 
-type tokenType = "access" | "refresh";
+type tokenType = "access" | "refresh" | "reset";
 
 class jwtServiceClass {
     //   getting the secret key
@@ -28,7 +28,6 @@ class jwtServiceClass {
   private getSignOptions(type: tokenType): any {
     return {
       expiresIn: this.getExpry(type),
-      algorithm: jwtConfigs.algorithm,
     };
   }
 
