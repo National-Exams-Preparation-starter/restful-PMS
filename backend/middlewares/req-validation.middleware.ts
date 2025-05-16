@@ -1,3 +1,4 @@
+import ApiResponse from "@/utils/api-response";
 import { Request, Response, NextFunction } from "express";
 import { AnySchema } from "yup";
 
@@ -12,6 +13,6 @@ export const validate =
       next();
     } catch (err: any) {
       const message = err.errors ? err.errors.join(", ") : "Invalid request";
-      res.status(400).json({ success: false, message });
+      return ApiResponse.error(res, message, 400);
     }
   };

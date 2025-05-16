@@ -23,7 +23,7 @@ const errorMiddleware = (
   const message = error.message || "Internal server error";
   const statusCode = message == "Internal server error" ? 500 : 400;
 
-  // Catch-all error (for other unexpected errors)
+  // Catch-all and send the error response
   return ApiResponse.error(res, message, statusCode);
 };
 
