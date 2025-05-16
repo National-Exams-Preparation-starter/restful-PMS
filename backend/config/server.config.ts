@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import env from 'env-var';
-import { TserverConfig } from '@/types/configTypes';
+import { TserverConfig } from '../types/configTypes';
 
 dotenv.config()
 

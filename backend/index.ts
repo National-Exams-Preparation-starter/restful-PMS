@@ -1,5 +1,5 @@
-import { InitServer } from "@/server";
-import { serverConfigs } from "@/config/server.config";
+import { InitServer } from "./server";
+import { serverConfigs } from "./config/server.config";
 
 const app = new InitServer();
 

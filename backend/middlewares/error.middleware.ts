@@ -1,4 +1,4 @@
-import ApiResponse from "@/utils/api-response";
+import ApiResponse from "../utils/api-response";
 import { NextFunction, Request, Response } from "express";
 
 const errorMiddleware = (

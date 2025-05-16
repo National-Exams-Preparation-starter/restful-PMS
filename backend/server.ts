@@ -2,9 +2,10 @@ import express, { Express } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-import { TserverConfig } from "@/types/configTypes";
+import { TserverConfig } from "./types/configTypes";
 import errorMiddleware from "./middlewares/error.middleware";
 import { prisma } from "./prisma";
+import router from "./routes";
 
 
 export class InitServer {
@@ -40,7 +41,7 @@ export class InitServer {
 
     // setting up the routes
     private setupRoutes():void {
-        this.app.use("/api/v1",(req,res)=>{})
+        this.app.use("/api/v1",router)
     }
 
     // starting the server

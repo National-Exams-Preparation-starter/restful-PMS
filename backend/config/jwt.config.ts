@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import env from 'env-var';
-import { TJwtConfig } from '@/types/configTypes';
+import { TJwtConfig } from '../types/configTypes';
 
 dotenv.config()
 
