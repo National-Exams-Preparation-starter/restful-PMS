@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { ReservationController } from "@/controllers/reservation.controller";
-import { requireRole } from "@/middlewares/auth.middleware";
+import { ReservationController } from "../controllers/reservation.controller";
+import { requireRole } from "../middlewares/auth.middleware";
 
 const reservationRouter = Router();
 

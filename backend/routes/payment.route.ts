@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { PaymentController } from "@/controllers/payment.controller";
-import { requireRole } from "@/middlewares/auth.middleware";
+import { PaymentController } from "../controllers/payment.controller";
+import { requireRole } from "../middlewares/auth.middleware";
 
 const paymentRouter = Router();
 

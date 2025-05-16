@@ -1,5 +1,5 @@
-import { ParkingSlotService } from "@/services/parking-slot.service";
-import ApiResponse from "@/utils/api-response";
+import { ParkingSlotService } from "../services/parking-slot.service";
+import ApiResponse from "../utils/api-response";
 import { NextFunction, Request, Response } from "express";
 
 export class ParkingSlotController {
@@ -64,7 +64,6 @@ export class ParkingSlotController {
     }
   }
 
-
   static async getParkingSlotById(
     req: Request,
     res: Response,
@@ -79,17 +78,17 @@ export class ParkingSlotController {
     }
   }
 
-    static async deleteParkingSlot(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<any> {
-        try {
-        const { slotId } = req.params;
-         await ParkingSlotService.deleteParkingSlot(slotId);
-        return ApiResponse.success(res, null, "parking slot deleted", 200);
-        } catch (error) {
-        next(error);
-        }
+  static async deleteParkingSlot(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { slotId } = req.params;
+      await ParkingSlotService.deleteParkingSlot(slotId);
+      return ApiResponse.success(res, null, "parking slot deleted", 200);
+    } catch (error) {
+      next(error);
     }
+  }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { VehicleController } from "@/controllers/vehicle.controller";
-import { requireRole } from "@/middlewares/auth.middleware";
+import { VehicleController } from "../controllers/vehicle.controller";
+import { requireRole } from "../middlewares/auth.middleware";
 
 const vehicleRouter = Router();
 

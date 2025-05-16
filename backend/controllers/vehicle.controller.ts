@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { VehicleService } from "@/services/vehicle.service";
-import ApiResponse from "@/utils/api-response";
+import { VehicleService } from "../services/vehicle.service";
+import ApiResponse from "../utils/api-response";
 
 export class VehicleController {
   static async create(
@@ -49,9 +49,12 @@ export class VehicleController {
     next: NextFunction
   ): Promise<any> {
     try {
-      const { userId } = req.params;
-    //@ts-ignore
-      const ownerId = userId ? userId : req.user.id;
+      const ownerId = req.params.userId
+
+      if (ownerId === undefined) {
+        return ApiResponse.error(res, "User ID is required", 400);
+      }
+
       const vehicles = await VehicleService.getUserVehicles(ownerId);
       return ApiResponse.success(res, vehicles);
     } catch (error) {

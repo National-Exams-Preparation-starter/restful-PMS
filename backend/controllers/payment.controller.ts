@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { PaymentClass } from "@/services/payment.service";
-import ApiResponse from "@/utils/api-response";
+import { PaymentClass } from "../services/payment.service";
+import ApiResponse from "../utils/api-response";
 import { PaymentStatus } from "@prisma/client";
 
 export class PaymentController {

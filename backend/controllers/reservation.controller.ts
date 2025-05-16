@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ReservationService } from "@/services/reservation.service";
-import ApiResponse from "@/utils/api-response";
+import { ReservationService } from "../services/reservation.service";
+import ApiResponse from "../utils/api-response";
 import { ReservationStatus } from "@prisma/client";
 
 export class ReservationController {

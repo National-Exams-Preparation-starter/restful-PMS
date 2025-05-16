@@ -57,17 +57,17 @@ export class InitServer {
         try {
             // connecting to the database
             await prisma.$connect();
-            console.log("✅ Database connected.");
+            console.log("Database connected.");
 
             const server = this.app.listen(port, () => {
-                console.log(`🚀 [server]:server is running at ${host}:${port}`);
+                console.log(`[server]:server is running at ${host}:${port}`);
             });
 
             // server stop handler
             this.setupGracefulShutdown(server);
             
         } catch (error) {
-            console.error("❌ Failed to connect to the database:", error);
+            console.error("Failed to connect to the database:", error);
             process.exit(1);
             
         }
@@ -76,15 +76,16 @@ export class InitServer {
     // stopping the server gracefully
     private setupGracefulShutdown(server: ReturnType<Express["listen"]>): void {
     const shutdown = async (signal: string) => {
-      console.log(`\n🛑 Received ${signal}. Closing server...`);
+      console.log(`Received ${signal}. Closing server...`);
       server.close(async () => {
         await prisma.$disconnect();
-        console.log("✅ Cleanup complete. Exiting.");
+        console.log("Cleanup complete. Exiting.");
         process.exit(0);
       });
     };
 
     process.on("SIGINT", () => shutdown("SIGINT")); //when typed ctrl+c
-    process.on("SIGTERM", () => shutdown("SIGTERM"));
+    // this is needed on prod
+    // process.on("SIGTERM", () => shutdown("SIGTERM"));
   }
 }

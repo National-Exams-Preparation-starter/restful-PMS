@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma";
+import { prisma } from "../prisma";
 import { PaymentStatus } from "@prisma/client";
 
 export class PaymentClass {

@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma";
+import { prisma } from "../prisma";
 
 export class VehicleService {
   // Create a new vehicle for a user
@@ -30,8 +30,14 @@ export class VehicleService {
     const vehicle = await prisma.vehicle.findUnique({
       where: { id },
       include: {
-        owner: true,
+        owner: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
       },
+      
     });
 
     if (!vehicle) {
