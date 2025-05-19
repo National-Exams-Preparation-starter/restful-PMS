@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useRegister } from "@/hooks/use-auth";
+import { useRegister, useResendVerifyEmail } from "@/hooks/use-auth";
 import {
   type RegisterInput,
   registerSchema,
@@ -32,13 +32,16 @@ export default function Register() {
       onSuccess: (response) => {
         if (response.success) {
           toast.success(response.message);
-          navigate("/auth/verify-email");
+          navigate("/auth/verify-email", {
+            state: { email: response.data?.email },
+          });
         }
       },
     });
   };
 
   const isLoading = registerMutation.isPending;
+  
 
   return (
     <div className="flex h-screen items-center justify-center">

@@ -23,13 +23,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      console.log("fetching");
-
       const { data } = await authservice.getProfile();
       setUser(data);
-      console.log(data);
     } catch (error) {
-      console.error("Failed to get user:", error);
       toast.error("failed to load user profile");
       setUser(null);
     } finally {

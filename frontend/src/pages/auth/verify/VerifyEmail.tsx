@@ -1,16 +1,20 @@
 import OTPContainer from "@/components/common/OTPContainer";
 import { Button } from "@/components/ui/button";
-import { useVerifyEmail } from "@/hooks/use-auth";
+import { useResendVerifyEmail, useVerifyEmail } from "@/hooks/use-auth";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState<string>("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { email } = location.state;
 
   const verifyEmailMutation = useVerifyEmail();
+  const resendEmailMutation = useResendVerifyEmail();
 
   const handleVerifyEmail = async () => {
     if (!code) {
@@ -22,34 +26,38 @@ const VerifyEmail = () => {
         if (response.success) {
           toast.success(response.message);
           navigate("/auth/login");
+        } else {
+          toast.error("verification failed, retry again");
         }
       },
     });
   };
 
-  const handleResendCode = async ()=>{
-
-  }
+  const handleResendCode = async () => {
+    if (email) {
+      resendEmailMutation.mutateAsync(email, {
+        onSuccess: (response) => {
+          if (response.success) {
+            toast.success(response.message);
+          } else {
+            toast.error("an Error occured, try again");
+          }
+        },
+      });
+    }
+  };
 
   const isLoading = verifyEmailMutation.isPending;
-
+  const isResendLoading = resendEmailMutation.isPending;
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="mx-auto w-full max-w-[500px] space-y-6 p-4">
-        <Link
-          to="/auth/forgot-password"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Link>
-
-        <OTPContainer setCode={setCode} />
+        <OTPContainer setCode={setCode} email={email} />
 
         <div className="space-y-4">
           <Button
             type="submit"
-            className="w-full"
+            className="w-full text-white"
             disabled={isLoading || code.length !== 6}
             onClick={handleVerifyEmail}
           >
@@ -62,10 +70,10 @@ const VerifyEmail = () => {
               Didn't receive the code?{" "}
               <button
                 onClick={handleResendCode}
-                // disabled={isResending}
+                disabled={isResendLoading}
                 className="text-primary hover:underline disabled:opacity-50"
               >
-                Resend
+                {isResendLoading ? "Resending..." : "Resend"}
               </button>
             </p>
           </div>

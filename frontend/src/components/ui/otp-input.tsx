@@ -97,7 +97,7 @@ export function OTPInput({ length = 6, onComplete, className }: OTPInputProps) {
           ref={(ref) => {
             if (ref) inputRefs.current[index] = ref;
           }}
-          className="h-14 w-14 rounded-lg border border-input bg-background text-center text-xl focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0"
+          className="h-14 w-14 rounded-lg border border-light_gray_border bg-background text-center text-xl focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0"
           aria-label={`OTP digit ${index + 1}`}
         />
       ))}

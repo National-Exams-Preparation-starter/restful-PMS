@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/auth/AuthProvider";
-import { useLogin } from "@/hooks/use-auth";
+import { useLogin, useResendVerifyEmail } from "@/hooks/use-auth";
 import { type LoginInput, loginSchema } from "@/lib/validations/auth-schema";
 import type { User } from "@/types/auth";
 import { Loader2 } from "lucide-react";
@@ -24,20 +24,31 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
+  const resendEmailMutation = useResendVerifyEmail();
+
   const loginMutation = useLogin();
   const onSubmit = async (data: LoginInput) => {
     loginMutation.mutateAsync(data, {
       onSuccess: (response) => {
         if (response.success) {
           const user = response.data?.user;
-          setUser(user as User);
-          localStorage.setItem(
-            "access_token",
-            response.data?.access_token as string
-          );
-          navigate(user?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard");
-        }else{
-          toast.error(response.message)
+          if (user) {
+            if (user?.isVerified) {
+              setUser(user as User);
+              localStorage.setItem(
+                "access_token",
+                response.data?.access_token as string
+              );
+              navigate(
+                user?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard"
+              );
+            } else if (!user?.isVerified) {
+              toast.error("please verify your email before login");
+              handleResendCode(user?.email as string);
+            }
+          }
+        } else {
+          toast.error(response.message);
         }
       },
       onError: (error: any) => {
@@ -46,7 +57,23 @@ export default function Login() {
     });
   };
 
+  const handleResendCode = async (email: string) => {
+    if (email) {
+      resendEmailMutation.mutateAsync(email, {
+        onSuccess: (response) => {
+          if (response.success) {
+            toast.success(response.message);
+          } else {
+            toast.error("an Error occured, try resend again");
+          }
+          navigate("/auth/verify-email", { state: { email } });
+        },
+      });
+    }
+  };
+
   const isLoading = loginMutation.isPending;
+  const isResending = resendEmailMutation.isPending;
 
   return (
     <div className="flex h-screen items-center justify-center">
@@ -92,10 +119,12 @@ export default function Login() {
           <Button
             type="submit"
             className="w-full text-white"
-            disabled={isLoading}
+            disabled={isLoading || isResending}
           >
-            {isLoading && <Loader2 className="mr-2 animate-spin text-white" />}
-            {isLoading ? "Loading..." : "Login"}
+            {(isLoading || isResending) && (
+              <Loader2 className="mr-2 animate-spin text-white" />
+            )}
+            {isLoading || isResending ? "Loading..." : "Login"}
           </Button>
         </form>
         <div className="text-center text-sm">

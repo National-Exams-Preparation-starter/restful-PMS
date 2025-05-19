@@ -13,20 +13,24 @@ export const useGetProfile = () => {
 
 export const useLogin = () => {
   return useMutation({
-    mutationFn: (data: LoginDto) => authService.login(data),
-    onSuccess: (response) => {},
+    mutationFn: (data: LoginDto) => authService.login(data)
   });
 };
 
 export const useRegister = () => {
   return useMutation({
-    mutationFn: (data: RegisterDto) => authService.register(data),
-    onSuccess: (data) => {},
+    mutationFn: (data: RegisterDto) => authService.register(data)
   });
 };
 
 export const useVerifyEmail = ()=>{
   return useMutation({
     mutationFn:(code:string)=>authService.verifyEmail(code)
+  })
+}
+
+export const useResendVerifyEmail = ()=>{
+  return useMutation({
+    mutationFn:(email:string)=>authService.resendEmailVerification(email)
   })
 }
