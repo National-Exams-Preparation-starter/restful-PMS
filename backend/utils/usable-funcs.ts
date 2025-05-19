@@ -1,5 +1,6 @@
 import crypto from "crypto";
 
 export const generateRandomCode = (): string => {
-  return crypto.randomBytes(32).toString("hex");
+  const randomInt = crypto.randomInt(0, 1000000);
+  return randomInt.toString().padStart(6, '0');
 };

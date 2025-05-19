@@ -1,7 +1,7 @@
 import type { LoginDto, RegisterDto, User } from "../types/auth";
 import { authorizedAPI, unauthorizedAPI } from "../utils/axios.config";
 import { handleApiRequest } from "./utils.service";
-import {type apiResponse } from "@/types/common";
+import { type apiResponse } from "@/types/common";
 
 export class AuthService {
   // registering a new user
@@ -25,7 +25,15 @@ export class AuthService {
     return handleApiRequest(() => authorizedAPI.get("/auth/me"));
   }
 
-  verifyEmail(code:string):Promise<apiResponse<null>>{
-    return handleApiRequest(()=>unauthorizedAPI.post("/auth/verify-email",{code}))
+  verifyEmail(code: string): Promise<apiResponse<null>> {
+    return handleApiRequest(() =>
+      unauthorizedAPI.post("/auth/verify-email", { code })
+    );
+  }
+
+  resendEmailVerification(email: string): Promise<apiResponse<null>> {
+    return handleApiRequest(() =>
+      unauthorizedAPI.post("/auth/resend-verification-email", { email })
+    );
   }
 }

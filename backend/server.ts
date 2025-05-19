@@ -85,7 +85,5 @@ export class InitServer {
     };
 
     process.on("SIGINT", () => shutdown("SIGINT")); //when typed ctrl+c
-    // this is needed on prod
-    // process.on("SIGTERM", () => shutdown("SIGTERM"));
   }
 }

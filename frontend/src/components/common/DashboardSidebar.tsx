@@ -68,26 +68,28 @@ const DashboardSidebar: FC<Props> = ({
           {navItems.map(renderNavItem)}
         </div>
         <div>
-          <button
-            onClick={() => logout()}
-            className={`text-sm transition hover:bg-neutral-100 duration-300 h-[44px] px-3 rounded-lg text-[#494C52] w-full flex items-center justify-between gap-2 font-medium`}
-          >
-            <div
-              className={`flex items-center gap-2 ${
-                isSidebarMinimized ? "absolute w-full z-50" : ""
-              }`}
+          <div className="px-1">
+            <button
+              onClick={() => logout()}
+              className={`text-sm transition hover:bg-neutral-100 duration-300 h-[44px] px-3 border-none rounded-lg text-[#494C52] w-full flex items-center justify-between gap-2 font-medium`}
             >
-              <div className="w-6 h-6 flex items-center justify-center">
-                <Icon
-                  icon={"tabler:logout-2"}
-                  fontSize={24}
-                  className="text-red-700 text-2xl"
-                />
+              <div
+                className={`flex items-center gap-2 ${
+                  isSidebarMinimized ? "absolute w-full z-50" : ""
+                }`}
+              >
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <Icon
+                    icon={"tabler:logout-2"}
+                    fontSize={24}
+                    className="text-red-700 text-2xl"
+                  />
+                </div>
+                {!isSidebarMinimized && "Logout"}
               </div>
-              {!isSidebarMinimized && "Logout"}
-            </div>
-          </button>
-          <Separator orientation="horizontal" className="bg-mainBlue/5 my-2" />
+            </button>
+          </div>
+          <Separator orientation="horizontal" className="bg-primary/5 my-2" />
           <div className={"px-1"}>
             <UserCard
               isCollapsed={isSidebarMinimized}

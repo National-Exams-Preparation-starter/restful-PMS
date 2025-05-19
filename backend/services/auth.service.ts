@@ -101,9 +101,10 @@ export class AuthService {
         email: true,
         password: true,
         role: true,
+        isVerified: true,
       },
     });
-    
+
     if (!user) {
       throw new Error("Invalid credentials");
     }
@@ -132,6 +133,7 @@ export class AuthService {
         name: true,
         email: true,
         role: true,
+        isVerified: true,
       },
     });
     if (!user) {
