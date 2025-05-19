@@ -1,8 +1,11 @@
+import AppLayout from '@/components/layout/AppLayout';
 import React from 'react'
 
 const AdminPage = () => {
   return (
-    <div>this is the admin page</div>
+    <AppLayout>
+      <div className=''>this is the admin page</div>
+    </AppLayout>
   )
 }
 

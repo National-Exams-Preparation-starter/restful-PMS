@@ -21,6 +21,15 @@ export const handleApiRequest = async (
   }
 };
 
+export const isAuthenticated = (): boolean => {
+  return localStorage.getItem("access_token") !== null;
+};
+
+export const logout = () => {
+  localStorage.removeItem("access_token");
+  window.location.href = "/auth/login";
+};
+
 export const handleUnauthorized = (router: any) => {
   cookies.remove("accessToken", { path: "/" });
   cookies.remove("refreshToken", { path: "/" });

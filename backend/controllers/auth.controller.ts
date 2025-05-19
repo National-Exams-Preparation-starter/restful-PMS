@@ -55,7 +55,7 @@ export class AuthController {
       // @ts-ignore
       const user = req.user;
       const userInfo = await AuthService.getLoggedInUser(user.id);
-      return ApiResponse.success(res, { userInfo });
+      return ApiResponse.success(res, userInfo );
     } catch (error) {
       next(error);
     }

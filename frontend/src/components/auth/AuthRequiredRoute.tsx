@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import {type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthProvider";
+import LoadingScreen from "../common/LoadingScreen";
 
 interface AuthRequiredRouteProps {
   children: ReactNode;
@@ -9,11 +10,13 @@ interface AuthRequiredRouteProps {
 export default function AuthRequiredRoute({
   children,
 }: AuthRequiredRouteProps) {
-  const { isAuthenticated, role } = useAuth();
-  const isClient = role === "CLIENT";
+  const { user,loading,isLoggedIn} = useAuth();
+  const isClient = user?.role === "CLIENT";
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (loading) return <LoadingScreen />;
+
+  if (!isLoggedIn) {
+    return <Navigate to="/auth/login" />;
   }
 
   if (!isClient) {

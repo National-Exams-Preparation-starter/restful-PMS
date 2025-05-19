@@ -1,11 +1,10 @@
 import { Home, Link, LogOut } from "lucide-react";
 import { useAuth } from "../../context/auth/AuthProvider";
-import { useAuthActions } from "../../context/auth/auth-actions";
+import { logout } from "@/services/utils.service";
 
 const Sidebar = () => {
   const { user } = useAuth();
-  const { logout } = useAuthActions();
-
+  
   const handleLogout = () => {
     logout();
   };
@@ -37,12 +36,12 @@ const Sidebar = () => {
           <div className="flex items-center space-x-3">
             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-sm font-medium text-primary">
-                {user.name.toUpperCase()}
+                {user?.name?.toUpperCase()}
               </span>
             </div>
             <div className="space-y-0.5">
-              <p className="text-sm font-medium">{user.name}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="text-sm font-medium">{user?.name}</p>
+              <p className="text-xs text-muted-foreground">{user?.email}</p>
             </div>
           </div>
         </div>

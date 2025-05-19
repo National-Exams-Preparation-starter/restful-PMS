@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/AuthProvider";
+import LoadingScreen from "../common/LoadingScreen";
 
 interface AdminRequiredRouteProps {
   children: ReactNode;
@@ -9,11 +10,13 @@ interface AdminRequiredRouteProps {
 export default function AdminRequiredRoute({
   children,
 }: AdminRequiredRouteProps) {
-  const { isAuthenticated, role } = useAuth();
-  const isAdmin = role === "ADMIN";
+  const { user,loading,isLoggedIn} = useAuth();
+  const isAdmin = user?.role === "ADMIN";
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (loading) return <LoadingScreen />;
+
+  if (!isLoggedIn) {
+    return <Navigate to="/auth/login" />;
   }
 
   if (!isAdmin) {

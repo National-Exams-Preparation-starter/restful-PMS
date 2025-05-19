@@ -5,14 +5,15 @@ export interface User {
 }
 
 export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  role: "ADMIN" | "CLIENT" | undefined;
-  loading: boolean;
+  
 }
 
-export interface AuthContextType extends AuthState {
-  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
+export interface AuthContextType{
+  user: User | null;
+  loading: boolean;
+  isLoggedIn: boolean;
+  setUser: (user: User | null) => void;
+  refreshUser: () => Promise<void>;
 }
 
 export type RegisterDto = {

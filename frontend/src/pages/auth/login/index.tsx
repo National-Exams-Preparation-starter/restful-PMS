@@ -1,22 +1,20 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AuthService } from "@/services/auth.service";
-import { AxiosError } from "axios";
-import { LoginInput, loginSchema } from "@/lib/validations/auth-schema";
-import { useLogin } from "@/hooks/use-auth";
 import { useAuth } from "@/context/auth/AuthProvider";
+import { useLogin } from "@/hooks/use-auth";
+import { type LoginInput, loginSchema } from "@/lib/validations/auth-schema";
+import type { User } from "@/types/auth";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Login() {
-  const { setAuthState } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
-
 
   const {
     register,
@@ -25,35 +23,38 @@ export default function Login() {
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
- 
+
   const loginMutation = useLogin();
   const onSubmit = async (data: LoginInput) => {
     loginMutation.mutateAsync(data, {
       onSuccess: (response) => {
         if (response.success) {
-          const user = response?.data?.user;
-          setAuthState({
-            user,
-            isAuthenticated: true,
-            loading: false,
-            role: user?.role,
-          });
+          const user = response.data?.user;
+          setUser(user as User);
+          localStorage.setItem(
+            "access_token",
+            response.data?.access_token as string
+          );
           navigate(user?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard");
+        }else{
+          toast.error(response.message)
         }
+      },
+      onError: (error: any) => {
+        toast.error(error?.response?.data?.message);
       },
     });
   };
 
-  const isLoading = loginMutation.isPending
+  const isLoading = loginMutation.isPending;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="flex h-screen items-center justify-center">
+      <div className="bg-primary h-full w-[40%] hidden lg:block"></div>
       <div className="mx-auto w-full max-w-[500px] space-y-6 p-4">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-bold">Login</h1>
-          <p className="text-sm text-muted-foreground">
-            Fill in your credentials to login
-          </p>
+          <h1 className="text-3xl font-bold">Welcome Back!</h1>
+          <p className="text-sm text ">Enter your credentials to login</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
@@ -88,7 +89,12 @@ export default function Login() {
               Forgot Password?
             </Link>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full text-white"
+            disabled={isLoading}
+          >
+            {isLoading && <Loader2 className="mr-2 animate-spin text-white" />}
             {isLoading ? "Loading..." : "Login"}
           </Button>
         </form>

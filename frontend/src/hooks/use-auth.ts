@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AuthService } from "../services/auth.service";
-import { LoginDto, RegisterDto } from "../types/auth";
+import type { LoginDto, RegisterDto } from "../types/auth";
 
 const authService = new AuthService();
 
@@ -14,7 +14,7 @@ export const useGetProfile = () => {
 export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginDto) => authService.login(data),
-    onSuccess: (data) => {},
+    onSuccess: (response) => {},
   });
 };
 
@@ -24,3 +24,9 @@ export const useRegister = () => {
     onSuccess: (data) => {},
   });
 };
+
+export const useVerifyEmail = ()=>{
+  return useMutation({
+    mutationFn:(code:string)=>authService.verifyEmail(code)
+  })
+}

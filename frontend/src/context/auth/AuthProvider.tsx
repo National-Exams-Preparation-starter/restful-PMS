@@ -1,64 +1,54 @@
+import { isAuthenticated, logout } from "@/services/utils.service";
 import type React from "react";
-import { AuthContext } from "./AuthContext";
-import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { AuthService } from "../../services/auth.service";
-import { Cookies } from "react-cookie";
-import { AuthState } from "../../types/auth";
-import { useLogin, useRegister } from "../../hooks/use-auth";
-
-const initialState: AuthState = {
-  user: null,
-  isAuthenticated: false,
-  role: undefined,
-  loading: true,
-};
+import type { User } from "../../types/auth";
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [state, setState] = useState<AuthState>(initialState);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-  const cookies = new Cookies();
 
-  const authService = new AuthService();
+  const authservice = new AuthService();
 
-  const accessToken = cookies.get("accessToken");
+  const refreshUser = async () => {
+    if (!isAuthenticated()) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
 
+    try {
+      console.log("fetching");
+
+      const { data } = await authservice.getProfile();
+      setUser(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Failed to get user:", error);
+      toast.error("failed to load user profile");
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // Load user on mount
   useEffect(() => {
-    const getMe = async () => {
-      try {
-        if (accessToken) {
-          const response = await authService.getProfile();
-          if (response.success) {
-            const user = response.data;
-            setState({
-              user: user,
-              isAuthenticated: true,
-              loading: false,
-              role: user?.role,
-            });
-            if (user?.role === "ADMIN") {
-              navigate("/admin/dashboard");
-            } else if (user?.role === "CLIENT") {
-              navigate("/dashboard");
-            }
-          }
-        }
-      } catch (error) {
-        navigate("/auth/login");
-      }
-    };
-
-    getMe();
-  }, [navigate]);
+    refreshUser();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        ...state,
-        setAuthState: setState,
+        refreshUser,
+        loading,
+        setUser,
+        user,
+        isLoggedIn: user !== null,
       }}
     >
       {children}
@@ -69,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuthContext must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
